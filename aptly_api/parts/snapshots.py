@@ -12,6 +12,7 @@ import pytz
 
 from aptly_api.base import BaseAPIClient, AptlyAPIException
 from aptly_api.parts.packages import Package, PackageAPISection
+from aptly_api.parts.tasks import Task, TaskAPISection
 
 Snapshot = NamedTuple('Snapshot', [
     ('name', str),
@@ -42,7 +43,7 @@ class SnapshotAPISection(BaseAPIClient):
             ret.append(self.snapshot_from_response(rsnap))
         return ret
 
-    def create_from_repo(self, reponame: str, snapshotname: str, description: Optional[str] = None) -> Snapshot:
+    def create_from_repo(self, reponame: str, snapshotname: str, description: Optional[str] = None) -> Task:
         body = {
             "Name": snapshotname,
         }
@@ -50,7 +51,17 @@ class SnapshotAPISection(BaseAPIClient):
             body["Description"] = description
 
         resp = self.do_post("api/repos/%s/snapshots" % quote(reponame), json=body)
-        return self.snapshot_from_response(resp.json())
+        return TaskAPISection.task_from_response(resp.json())
+
+    def create_from_mirror(self, reponame: str, mirrorname: str, description: Optional[str] = None) -> Task:
+        body = {
+            "Name": mirrorname,
+        }
+        if description is not None:
+            body["Description"] = description
+
+        resp = self.do_post("api/mirrors/%s/snapshots" % quote(reponame), json=body)
+        return TaskAPISection.task_from_response(resp.json())
 
     def create_from_packages(self, snapshotname: str, description: Optional[str] = None,
                              source_snapshots: Optional[Sequence[str]] = None,

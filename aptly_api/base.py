@@ -7,7 +7,7 @@
 from typing import Sequence, Dict, Tuple, Optional, Union, List, Any, MutableMapping
 from urllib.parse import urljoin
 
-from typing.io import IO, BinaryIO
+from typing import IO, BinaryIO
 
 import requests
 from requests.auth import AuthBase

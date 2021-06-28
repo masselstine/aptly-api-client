@@ -7,6 +7,7 @@ from typing import NamedTuple, Sequence, Dict, Union, List, cast, Optional
 from urllib.parse import quote
 
 from aptly_api.base import BaseAPIClient, AptlyAPIException
+from aptly_api.parts.tasks import TaskAPISection, Task
 
 PublishEndpoint = NamedTuple('PublishEndpoint', [
     ('storage', str),
@@ -67,7 +68,7 @@ class PublishAPISection(BaseAPIClient):
                 sign_skip: bool = False, sign_batch: bool = True, sign_gpgkey: Optional[str] = None,
                 sign_keyring: Optional[str] = None, sign_secret_keyring: Optional[str] = None,
                 sign_passphrase: Optional[str] = None, sign_passphrase_file: Optional[str] = None,
-                acquire_by_hash: Optional[bool] = None) -> PublishEndpoint:
+                acquire_by_hash: Optional[bool] = None) -> Task:
         """
         Example:
 
@@ -125,7 +126,7 @@ class PublishAPISection(BaseAPIClient):
         body["Signing"] = sign_dict
 
         resp = self.do_post(url, json=body)
-        return self.endpoint_from_response(resp.json())
+        return TaskAPISection.task_from_response(resp.json())
 
     def update(self, *, prefix: str, distribution: str,
                snapshots: Optional[Sequence[Dict[str, str]]] = None, force_overwrite: bool = False,

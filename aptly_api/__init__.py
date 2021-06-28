@@ -12,9 +12,11 @@ from aptly_api.parts.packages import Package as Package
 from aptly_api.parts.publish import PublishEndpoint as PublishEndpoint
 from aptly_api.parts.repos import Repo as Repo, FileReport as FileReport
 from aptly_api.parts.snapshots import Snapshot as Snapshot
+from aptly_api.parts.mirrors import Mirror as Mirror
+from aptly_api.parts.tasks import Task as Task
 
 version = "0.2.3"
 
 
 __all__ = ['Client', 'AptlyAPIException', 'version', 'Package', 'PublishEndpoint', 'Repo', 'FileReport',
-           'Snapshot']
+           'Snapshot', 'Mirror', 'Task']

@@ -8,6 +8,7 @@ from urllib.parse import quote
 
 from aptly_api.base import BaseAPIClient, AptlyAPIException
 from aptly_api.parts.packages import PackageAPISection, Package
+from aptly_api.parts.tasks import Task, TaskAPISection
 
 Repo = NamedTuple('Repo', [
     ('name', str),
@@ -112,7 +113,7 @@ class ReposAPISection(BaseAPIClient):
         self.do_delete("api/repos/%s" % quote(reponame), params={"force": "1" if force else "0"})
 
     def add_uploaded_file(self, reponame: str, dir: str, filename: Optional[str] = None,
-                          remove_processed_files: bool = True, force_replace: bool = False) -> FileReport:
+                          remove_processed_files: bool = True, force_replace: bool = False) -> Task:
         params = {
             "noRemove": "0" if remove_processed_files else "1",
         }
@@ -125,7 +126,7 @@ class ReposAPISection(BaseAPIClient):
             resp = self.do_post("api/repos/%s/file/%s/%s" % (quote(reponame), quote(dir), quote(filename),),
                                 params=params)
 
-        return self.filereport_from_response(resp.json())
+        return TaskAPISection.task_from_response(resp.json())
 
     def add_packages_by_key(self, reponame: str, *package_keys: str) -> Repo:
         resp = self.do_post("api/repos/%s/packages" % quote(reponame), json={
