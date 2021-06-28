@@ -47,8 +47,11 @@ class MirrorAPISection(BaseAPIClient):
         return mirrors
 
     def create(self, name: str, archive_url: str, distribution: Optional[str] = None,
-               components: Sequence[str] = None, arhitectures: Sequence[str] = None,
-               ignoresignatures: Optional[bool] = False) -> Mirror:
+               filter: Optional[str] = None, components: Sequence[str] = None,
+               arhitectures: Sequence[str] = None, keyrings: Sequence[str] = None,
+               with_sources: Optional[bool] = False, with_udebs: Optional[bool] = False,
+               with_installer: Optional[bool] = False, filter_with_deps: Optional[bool] = False,
+               force_components: Optional[bool] = False, ignore_signatures: Optional[bool] = False) -> Mirror:
         data = {}
 
         data["Name"] = name
@@ -56,28 +59,69 @@ class MirrorAPISection(BaseAPIClient):
 
         if distribution:
             data["Distribution"] = distribution
+        if filter:
+            data["Filter"] = filter
         if components:
             data["Components"] = components
         if arhitectures:
             data["Architectures"] = arhitectures
-        if ignoresignatures:
-            data["IgnoreSignatures"] = ignoresignatures
+        if keyrings:
+            data["Keyrings"] = keyrings
+        if with_sources:
+            data["DownloadSources"] = with_sources
+        if with_udebs:
+            data["DownloadUdebs"] = with_udebs
+        if with_installer:
+            data["DownloadInstaller"] = with_installer
+        if filter_with_deps:
+            data["FilterWithDeps"] = filter_with_deps
+        if force_components:
+            data["SkipComponentCheck"] = force_components
+        if ignore_signatures:
+            data["IgnoreSignatures"] = ignore_signatures
 
         resp = self.do_post("api/mirrors", json=data)
 
         return self.mirror_from_response(resp.json())
 
-    def update(self, name: str, ignoresignatures: Optional[bool] = False,
-               force: Optional[bool] = False, skipexistingpackages: Optional[bool] = False,
-               maxtries: Optional[int] = 1) -> Task:
+    def update(self, name: str, archive_url: Optional[str] = None,
+               filter: Optional[str] = None, arhitectures: Sequence[str] = None, 
+               components: Sequence[str] = None, keyrings: Sequence[str] = None,
+               filter_with_deps: Optional[bool] = None, with_sources: Optional[bool] = None,
+               with_udebs: Optional[bool] = None, force_components: Optional[bool] = None,
+               ignore_checksums: Optional[bool] = None, ignore_signatures: Optional[bool] = None,
+               force: Optional[bool] = None, skip_existing_packages: Optional[bool] = None,
+               max_tries: Optional[int] = 1) -> Task:
         body = {}
 
-        if ignoresignatures:
-            body["IgnoreSignatures"] = ignoresignatures
-        if skipexistingpackages:
-            body["SkipExistingPackages"] = skipexistingpackages
-        if maxtries:
-            body["MaxTries"] = maxtries
+        if archive_url:
+            body["ArchiveURL"] = archive_url
+        if filter:
+            body["Filter"] = filter
+        if arhitectures:
+            body["Architectures"] = arhitectures
+        if components:
+            body["Components"] = components
+        if keyrings:
+            body["Keyrings"] = keyrings
+        if filter_with_deps:
+            body["FilterWithDeps"] = filter_with_deps
+        if with_sources:
+            body["DownloadSources"] = with_sources
+        if with_udebs:
+            body["DownloadUdebs"] = with_udebs
+        if force_components:
+            body["SkipComponentCheck"] = force_components
+        if ignore_checksums:
+            body["IgnoreChecksums"] = ignore_checksums
+        if ignore_signatures:
+            body["IgnoreSignatures"] = ignore_signatures
+        if force:
+            body["ForceUpdate"] = force
+        if skip_existing_packages:
+            body["SkipExistingPackages"] = skip_existing_packages
+        if max_tries:
+            body["MaxTries"] = max_tries
 
         resp = self.do_put("api/mirrors/%s" % quote(name), json=body)
 
