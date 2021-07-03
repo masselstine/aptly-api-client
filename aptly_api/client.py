@@ -14,6 +14,7 @@ from aptly_api.parts.files import FilesAPISection
 from aptly_api.parts.snapshots import SnapshotAPISection
 from aptly_api.parts.mirrors import MirrorAPISection
 from aptly_api.parts.tasks import TaskAPISection
+from aptly_api.parts.db import DbAPISection
 
 
 class Client:
@@ -37,6 +38,8 @@ class Client:
                                         ssl_cert=ssl_cert, http_auth=http_auth, timeout=timeout)
         self.tasks = TaskAPISection(base_url=self.__aptly_server_url, ssl_verify=ssl_verify,
                                         ssl_cert=ssl_cert, http_auth=http_auth, timeout=timeout)
+        self.db = DbAPISection(base_url=self.__aptly_server_url, ssl_verify=ssl_verify,
+                                     ssl_cert=ssl_cert, http_auth=http_auth, timeout=timeout)
 
     @property
     def aptly_server_url(self) -> str:
