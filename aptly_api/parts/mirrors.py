@@ -23,6 +23,7 @@ Mirror = NamedTuple("Mirror", [
     ("archive_root", Optional[str]),
     ("distribution", Optional[str]),
     ("components", Sequence[str]),
+    ("architectures", Sequence[str],)
 ])
 
 
@@ -34,6 +35,7 @@ class MirrorAPISection(BaseAPIClient):
             archive_root=api_response["ArchiveRoot"],
             distribution=api_response["Distribution"],
             components=cast(Sequence[str], api_response["Components"]),
+            architectures=cast(Sequence[str], api_response["Architectures"]),
         )
 
     def list(self) -> Sequence[Mirror]:
