@@ -48,7 +48,7 @@ class MirrorAPISection(BaseAPIClient):
 
     def create(self, name: str, archive_url: str, distribution: Optional[str] = None,
                filter: Optional[str] = None, components: Sequence[str] = None,
-               arhitectures: Sequence[str] = None, keyrings: Sequence[str] = None,
+               architectures: Sequence[str] = None, keyrings: Sequence[str] = None,
                with_sources: Optional[bool] = False, with_udebs: Optional[bool] = False,
                with_installer: Optional[bool] = False, filter_with_deps: Optional[bool] = False,
                force_components: Optional[bool] = False, ignore_signatures: Optional[bool] = False) -> Mirror:
@@ -63,8 +63,8 @@ class MirrorAPISection(BaseAPIClient):
             data["Filter"] = filter
         if components:
             data["Components"] = components
-        if arhitectures:
-            data["Architectures"] = arhitectures
+        if architectures:
+            data["Architectures"] = architectures
         if keyrings:
             data["Keyrings"] = keyrings
         if with_sources:
@@ -85,7 +85,7 @@ class MirrorAPISection(BaseAPIClient):
         return self.mirror_from_response(resp.json())
 
     def update(self, name: str, archive_url: Optional[str] = None,
-               filter: Optional[str] = None, arhitectures: Sequence[str] = None, 
+               filter: Optional[str] = None, architectures: Sequence[str] = None, 
                components: Sequence[str] = None, keyrings: Sequence[str] = None,
                filter_with_deps: Optional[bool] = None, with_sources: Optional[bool] = None,
                with_udebs: Optional[bool] = None, force_components: Optional[bool] = None,
@@ -98,8 +98,8 @@ class MirrorAPISection(BaseAPIClient):
             body["ArchiveURL"] = archive_url
         if filter:
             body["Filter"] = filter
-        if arhitectures:
-            body["Architectures"] = arhitectures
+        if architectures:
+            body["Architectures"] = architectures
         if components:
             body["Components"] = components
         if keyrings:
