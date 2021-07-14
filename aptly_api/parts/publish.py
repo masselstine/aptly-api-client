@@ -180,9 +180,10 @@ class PublishAPISection(BaseAPIClient):
                            (quote(self.escape_prefix(prefix)), quote(distribution),), json=body)
         return self.endpoint_from_response(resp.json())
 
-    def drop(self, *, prefix: str, distribution: str, force_delete: bool = False) -> None:
+    def drop(self, *, prefix: str, distribution: str, force_delete: bool = False) -> Task:
         params = {}
         if force_delete:
             params["force"] = "1"
-        self.do_delete("api/publish/%s/%s" %
-                       (quote(self.escape_prefix(prefix)), quote(distribution),), params=params)
+        resp = self.do_delete("api/publish/%s/%s" %
+                              (quote(self.escape_prefix(prefix)), quote(distribution),), params=params)
+        return TaskAPISection.task_from_response(resp.json())

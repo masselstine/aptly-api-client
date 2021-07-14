@@ -116,14 +116,15 @@ class SnapshotAPISection(BaseAPIClient):
             ret.append(PackageAPISection.package_from_response(rpkg))
         return ret
 
-    def delete(self, snapshotname: str, force: bool = False) -> None:
+    def delete(self, snapshotname: str, force: bool = False) -> Task:
         params = None
         if force:
             params = {
                 "force": "1",
             }
 
-        self.do_delete("api/snapshots/%s" % quote(snapshotname), params=params)
+        resp = self.do_delete("api/snapshots/%s" % quote(snapshotname), params=params)
+        return TaskAPISection.task_from_response(resp.json())
 
     def diff(self, snapshot1: str, snapshot2: str) -> Sequence[Dict[str, str]]:
         resp = self.do_get("api/snapshots/%s/diff/%s" % (quote(snapshot1), quote(snapshot2),))

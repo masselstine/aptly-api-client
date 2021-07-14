@@ -109,8 +109,9 @@ class ReposAPISection(BaseAPIClient):
             )
         return repos
 
-    def delete(self, reponame: str, force: bool = False) -> None:
-        self.do_delete("api/repos/%s" % quote(reponame), params={"force": "1" if force else "0"})
+    def delete(self, reponame: str, force: bool = False) -> Task:
+        resp = self.do_delete("api/repos/%s" % quote(reponame), params={"force": "1" if force else "0"})
+        return TaskAPISection.task_from_response(resp.json())
 
     def add_uploaded_file(self, reponame: str, dir: str, filename: Optional[str] = None,
                           remove_processed_files: bool = True, force_replace: bool = False) -> Task:
