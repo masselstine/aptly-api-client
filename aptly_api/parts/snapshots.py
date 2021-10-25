@@ -82,7 +82,7 @@ class SnapshotAPISection(BaseAPIClient):
         return self.snapshot_from_response(resp.json())
 
     def update(self, snapshotname: str, newname: Optional[str] = None,
-               newdescription: Optional[str] = None) -> Snapshot:
+               newdescription: Optional[str] = None) -> Task:
         if newname is None and newdescription is None:
             raise AptlyAPIException("When updating a Snapshot you must at lease provide either a new name or a "
                                     "new description.")
@@ -94,7 +94,7 @@ class SnapshotAPISection(BaseAPIClient):
             body["Description"] = newdescription
 
         resp = self.do_put("api/snapshots/%s" % quote(snapshotname), json=body)
-        return self.snapshot_from_response(resp.json())
+        return TaskAPISection.task_from_response(resp.json())
 
     def show(self, snapshotname: str) -> Snapshot:
         resp = self.do_get("api/snapshots/%s" % quote(snapshotname))
