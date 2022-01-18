@@ -65,7 +65,7 @@ class SnapshotAPISection(BaseAPIClient):
 
     def create_from_packages(self, snapshotname: str, description: Optional[str] = None,
                              source_snapshots: Optional[Sequence[str]] = None,
-                             package_refs: Optional[Sequence[str]] = None) -> Snapshot:
+                             package_refs: Optional[Sequence[str]] = None) -> Task:
         body = {
             "Name": snapshotname,
         }  # type: Dict[str, Union[str, Sequence[str]]]
@@ -79,7 +79,7 @@ class SnapshotAPISection(BaseAPIClient):
             body["PackageRefs"] = package_refs
 
         resp = self.do_post("api/snapshots", json=body)
-        return self.snapshot_from_response(resp.json())
+        return TaskAPISection.task_from_response(resp.json())
 
     def update(self, snapshotname: str, newname: Optional[str] = None,
                newdescription: Optional[str] = None) -> Task:
