@@ -129,11 +129,11 @@ class ReposAPISection(BaseAPIClient):
 
         return TaskAPISection.task_from_response(resp.json())
 
-    def add_packages_by_key(self, reponame: str, *package_keys: str) -> Repo:
+    def add_packages_by_key(self, reponame: str, *package_keys: str) -> Task:
         resp = self.do_post("api/repos/%s/packages" % quote(reponame), json={
             "PackageRefs": package_keys,
         })
-        return self.repo_from_response(resp.json())
+        return TaskAPISection.task_from_response(resp.json())
 
     def delete_packages_by_key(self, reponame: str, *package_keys: str) -> Task:
         resp = self.do_delete("api/repos/%s/packages" % quote(reponame), json={
